@@ -1,10 +1,12 @@
-import uuid, json
+import uuid
 
 from future.utils import raise_with_traceback
 from requests import Request, Session
 
-class Base(object):
+from .exceptions import CieloRequestException
 
+
+class Base(object):
     def __init__(self, merchant):
 
         self.merchant = merchant
@@ -36,7 +38,7 @@ class Base(object):
 
         response = s.send(prep)
 
-        if 'json' in response.headers['Content-Type'].lower():
+        if 'json' in response.headers.get('content-type', '').lower():
             answers = response.json()
         else:
             answers = [{
@@ -45,13 +47,7 @@ class Base(object):
             }]
 
         if response.status_code >= 400:
-            errors = []
-
-            for answer in answers:
-                errors.append('\r\n * [%s] %s\r\n' % (answer['Code'], answer['Message']))
-
-            data_send = json.loads(body or 'null')
-
-            raise_with_traceback(Exception('\r\n%s\r\nMethod: %s\r\nUri: %s\r\nData: %s' % (''.join(errors), method, response.url, json.dumps(data_send, indent=2))))
+            raise_with_traceback(CieloRequestException(response=response,
+                                                       **answers[0]))
 
         return answers

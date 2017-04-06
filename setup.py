@@ -26,7 +26,7 @@ settings.update(
     url='https://github.com/thiago-Malaca/API-3.0-Python',
     keywords='api3.0 cielo python sdk ecommerce',
     packages=find_packages(),
-    install_requires=['requests', 'future'],
+    install_requires=['requests==2.13.*', 'future'],
     license='MIT',
     classifiers=(
         # 'Development Status :: 5 - Production/Stable',

@@ -9,3 +9,4 @@ from .payment import *
 from .recurrentPayment import *
 
 from .cieloEcommerce import *
+from .request.exceptions import CieloRequestException
